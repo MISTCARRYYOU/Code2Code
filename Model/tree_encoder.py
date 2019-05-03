@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from tree_to_sequence.tree_lstm import TreeLSTM
-from tree_to_sequence.translating_trees import map_tree, tree_to_list
+from tree_lstm import TreeLSTM, BinaryTreeLSTM
+from translating_trees import map_tree, tree_to_list
 
 class TreeEncoder(nn.Module):
     """

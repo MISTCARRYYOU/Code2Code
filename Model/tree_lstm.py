@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from tree_to_sequence.translating_trees import Node
+from translating_trees import Node
 
 class TreeCell(nn.Module):
     """

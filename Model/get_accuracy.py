@@ -6,8 +6,8 @@ import torch
 import matplotlib.pyplot as plt
 
 from neural_nets_library import training
-from tree_to_sequence.program_datasets import *
-from tree_to_sequence.translating_trees import *
+from program_datasets import *
+from translating_trees import *
 
 from functools import partial
 import argparse

@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import Dataset
-from tree_to_sequence.translating_trees import *
+from translating_trees import *
 
 import copy
 import json
@@ -173,7 +173,7 @@ class SyntacticProgramDataset(Dataset):
 class ForLambdaDataset(SyntacticProgramDataset):
     def __init__(self, path, num_vars=10, num_ints=11, binarize_input=False, binarize_output=False, eos_token=True, 
                  input_as_seq=False, output_as_seq=True, one_hot=True, long_base_case=True):
-        progs_json = json.load(open(path))
+        progs_json = json.load(open(path))[:1000]
         for_progs = [make_tree_for(prog, long_base_case=long_base_case) for prog in progs_json]
         lambda_progs = [translate_from_for(copy.deepcopy(for_prog)) for for_prog in for_progs]
 

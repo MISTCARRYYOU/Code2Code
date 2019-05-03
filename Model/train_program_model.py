@@ -3,15 +3,15 @@ import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
 
-from neural_nets_library import training
-from tree_to_sequence.tree_encoder import TreeEncoder
-from tree_to_sequence.tree_decoder import TreeDecoder
-from tree_to_sequence.tree_to_sequence_attention import TreeToSequenceAttention
-from tree_to_sequence.grammar_tree_decoder import GrammarTreeDecoder
-from tree_to_sequence.multilayer_lstm_cell import MultilayerLSTMCell
-from tree_to_sequence.program_datasets import *
-from tree_to_sequence.translating_trees import *
-from tree_to_sequence.tree_to_tree_attention import TreeToTreeAttention
+import training
+from tree_encoder import TreeEncoder
+from tree_decoder import TreeDecoder
+from tree_to_sequence_attention import TreeToSequenceAttention
+from grammar_tree_decoder import GrammarTreeDecoder
+from multilayer_lstm_cell import MultilayerLSTMCell
+from program_datasets import *
+from translating_trees import *
+from tree_to_tree_attention import TreeToTreeAttention
 
 from functools import partial
 import argparse
@@ -45,9 +45,9 @@ def reset_all_parameters_uniform(model, stdev):
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--decoder_type', required=True, help='Name of decoder. Should be either grammar, sequence, or tree.')
-parser.add_argument('--save_file', required=True, help='Name of save file')
-parser.add_argument('--problem_number', type=int, required=True, help='Number of the program translation problem. 0 corresponds to for-lambda while 1 is javascript-coffeescript')
+parser.add_argument('--decoder_type', default="sequence", help='Name of decoder. Should be either grammar, sequence, or tree.')
+parser.add_argument('--save_file', default="model", help='Name of save file')
+parser.add_argument('--problem_number', type=int, default=0, help='Number of the program translation problem. 0 corresponds to for-lambda while 1 is javascript-coffeescript')
 parser.add_argument('--save_folder', default="test_various_models", help='Name of folder to save files in. Defaults to test_various_models/')
 parser.add_argument('--cuda_device', type=int, default=0, help='Number of cuda device. Not relevant if cuda is disabled. Default is 0.')
 parser.add_argument('--num_vars', type=int, default=10, help='Number of variable names. Default is 10.')
@@ -81,7 +81,7 @@ output_as_seq = (decoder_type == "sequence")
 
 if opt.problem_number == 0:
     # Make dataset
-    dset_train = ForLambdaDataset("ANC/MainProgramDatasets/ForLambda/training_For.json",
+    dset_train = ForLambdaDataset("./training_For.json",
                                        binarize_input=binarize_input, binarize_output=binarize_output, 
                                        eos_token=eos_token, one_hot=one_hot,
                                        num_ints=num_ints, num_vars=num_vars,
@@ -89,7 +89,7 @@ if opt.problem_number == 0:
                                        input_as_seq=input_as_seq, 
                                        output_as_seq=output_as_seq)
 
-    dset_val = ForLambdaDataset("ANC/MainProgramDatasets/ForLambda/validation_For.json",
+    dset_val = ForLambdaDataset("./validation_For.json",
                                        binarize_input=binarize_input, binarize_output=binarize_output, 
                                        eos_token=eos_token, one_hot=one_hot,
                                        num_ints=num_ints, num_vars=num_vars,
@@ -97,7 +97,7 @@ if opt.problem_number == 0:
                                        input_as_seq=input_as_seq, 
                                        output_as_seq=output_as_seq)
 
-    dset_test = ForLambdaDataset("ANC/MainProgramDatasets/ForLambda/test_For.json",
+    dset_test = ForLambdaDataset("./test_For.json",
                                        binarize_input=binarize_input, binarize_output=binarize_output, 
                                        eos_token=eos_token, one_hot=one_hot,
                                        num_ints=num_ints, num_vars=num_vars,
@@ -105,18 +105,18 @@ if opt.problem_number == 0:
                                        input_as_seq=input_as_seq, 
                                        output_as_seq=output_as_seq)
 elif opt.problem_number == 1:
-    dset_train = JsCoffeeDataset("ANC/MainProgramDatasets/CoffeeJavascript/training_CS.json", 
-                                 "ANC/MainProgramDatasets/CoffeeJavascript/training_JS.json",
+    dset_train = JsCoffeeDataset("./training_CS.json", 
+                                 "./training_JS.json",
                                   binarize_input=binarize_input, binarize_output=binarize_output, 
                                   eos_token=eos_token, one_hot=one_hot, num_ints=num_ints, num_vars=num_vars,
                                   long_base_case=long_base_case, input_as_seq=input_as_seq, output_as_seq=output_as_seq)
 
-    dset_val = JsCoffeeDataset("ANC/MainProgramDatasets/CoffeeJavascript/validation_CS.json", "ANC/MainProgramDatasets/CoffeeJavascript/validation_JS.json",
+    dset_val = JsCoffeeDataset("./validation_CS.json", "./validation_JS.json",
                                 binarize_input=binarize_input, binarize_output=binarize_output, 
                                 eos_token=eos_token, one_hot=one_hot, num_ints=num_ints, num_vars=num_vars,
                                 long_base_case=long_base_case, input_as_seq=input_as_seq, output_as_seq=output_as_seq)
 
-    dset_test = JsCoffeeDataset("ANC/MainProgramDatasets/CoffeeJavascript/test_CS.json", "ANC/MainProgramDatasets/CoffeeJavascript/test_JS.json",
+    dset_test = JsCoffeeDataset("./test_CS.json", "./test_JS.json",
                                  binarize_input=binarize_input, binarize_output=binarize_output, 
                                  eos_token=eos_token, one_hot=one_hot, num_ints=num_ints, num_vars=num_vars,
                                  long_base_case=long_base_case, input_as_seq=input_as_seq, output_as_seq=output_as_seq)

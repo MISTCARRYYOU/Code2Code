@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from tree_to_sequence.translating_trees import ( Node, pretty_print_tree, Lambda )
+from translating_trees import ( Node, pretty_print_tree, Lambda )
 
 class TreeToTreeAttention(nn.Module):
     def __init__(self, encoder, decoder, hidden_size, embedding_size, nclass,

@@ -1,5 +1,5 @@
 import torch
-import pptree
+import translating_trees
 from enum import IntEnum
 
 from six import string_types
@@ -536,7 +536,7 @@ def pretty_print_attention_tree(attention_list, input_tree, parent, write_index,
         root_val = "(" + root_val + ")"
     
     # Create new node
-    root_node = pptree.Node(root_val, parent)
+    root_node = translating_trees.Node(root_val, parent)
     curr_index += 1
     
     # Recursively add the child subtrees to the tree.
@@ -544,7 +544,7 @@ def pretty_print_attention_tree(attention_list, input_tree, parent, write_index,
         curr_index = pretty_print_attention_tree(attention_list, child, root_node, write_index, 
                                                  curr_index)
     if parent is None:
-        pptree.print_tree(root_node)
+        translating_trees.print_tree(root_node)
         
     return curr_index
         
@@ -554,7 +554,7 @@ def pretty_print_tree(tree):
     
     :param tree: the tree to print
     """
-    pptree.print_tree(map_tree(lambda val: str(get_val(val)), tree), nameattr="value")
+    translating_trees.print_tree(map_tree(lambda val: str(get_val(val)), tree), nameattr="value")
     
 def get_val(value):
     """

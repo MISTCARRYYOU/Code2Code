@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from tree_to_sequence.tree_to_sequence import TreeToSequence
+from tree_to_sequence import TreeToSequence
 
 class TreeToSequenceAttention(TreeToSequence):
     def __init__(self, encoder, decoder, hidden_size, nclass, embedding_size, 
